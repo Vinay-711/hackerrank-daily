@@ -3,3 +3,7 @@
 [Diagonal Difference](diagonal-difference/README.md) — **Accepted — 10 points**.
 
 [Judge record](https://www.hackerrank.com/challenges/diagonal-difference/submissions/code/486436796); ID `486436796`.
+
+- [Plus Minus](plus-minus/README.md) — **Accepted**.
+
+- [Staircase](staircase/README.md) — **Accepted**.
