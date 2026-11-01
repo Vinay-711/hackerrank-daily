@@ -4,7 +4,7 @@ Problem: [Diagonal Difference](https://www.hackerrank.com/challenges/diagonal-di
 
 Date: 2026-11-01 (Asia/Kolkata)
 
-Status: **Prepared — locally tested; not submitted to the platform.**
+Status: **Accepted — 10 points**
 
 ## Approach
 
@@ -20,8 +20,10 @@ Run `python3 -B test_solution.py` from this folder.
 
 Result: 33 cases passed. Tests are original and do not represent the hidden judge suite.
 
-## Submission blocker
+## Judge result
 
-Browser automation connection failed (Debugger unattached) before account history and judge submission could be verified. Prior accepted status is unknown; this is not claimed as a new platform solve. Automated-submission permission must be verified before a later submission.
+Status: **Accepted — 10 points**. Submission/log ID: `486436796`.
 
-AI-assisted practice solution; no contest participation or rating change is claimed.
+[Judge record](https://www.hackerrank.com/challenges/diagonal-difference/submissions/code/486436796). Verified in the logged-in platform UI on November 1, 2026. `submission.py` preserves the submitted code; `solution.py` is the independently tested reusable version.
+
+AI-assisted archived practice; no rated contest participation is claimed.
