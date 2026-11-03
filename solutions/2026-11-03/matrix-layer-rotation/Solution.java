@@ -1,0 +1,5 @@
+import java.io.*;
+import java.util.*;
+public class Solution {
+ public static void main(String[] args)throws Exception{Scanner sc=new Scanner(System.in);int m=sc.nextInt(),n=sc.nextInt(),r=sc.nextInt();int[][] a=new int[m][n];for(int i=0;i<m;i++)for(int j=0;j<n;j++)a[i][j]=sc.nextInt();for(int k=0;k<Math.min(m,n)/2;k++){int bottom=m-1-k,right=n-1-k;int[] pos=new int[2*(bottom-k+right-k)];int z=0;for(int j=k;j<right;j++)pos[z++]=k*n+j;for(int i=k;i<bottom;i++)pos[z++]=i*n+right;for(int j=right;j>k;j--)pos[z++]=bottom*n+j;for(int i=bottom;i>k;i--)pos[z++]=i*n+k;int[] values=new int[z];for(int i=0;i<z;i++)values[i]=a[pos[i]/n][pos[i]%n];for(int i=0;i<z;i++)a[pos[i]/n][pos[i]%n]=values[(i+r%z)%z];}StringBuilder out=new StringBuilder();for(int[] row:a){for(int j=0;j<n;j++){if(j>0)out.append(' ');out.append(row[j]);}out.append('\n');}System.out.print(out);}
+}
