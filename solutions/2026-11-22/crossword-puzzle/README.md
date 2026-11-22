@@ -6,7 +6,7 @@ Date: 2026-11-22 (Asia/Kolkata). Status: **Accepted**. Platform: **HackerRank**.
 
 ## Approach
 
-Back‑track over all horizontal/vertical '-' slots (max ~20). For each slot try every unused word of matching length that fits the current letters, place it (saving previous chars), recurse, and undo on failure. Grid size is constant (10×10), so time is exponential in number of words but trivial for ≤10 words; worst‑case well under a millisecond. Space usage O(10×10) for the board plus O(number of slots) for slot list and recursion depth.
+Backtracking over all identified horizontal/vertical slots (length ≥ 2). For each slot we try every unused word of matching length that fits the current letters, place it, recurse, and backtrack if needed. With at most 10 words and a 10×10 board the search space is tiny. Time complexity is exponential in the number of words but bounded by a few thousand operations; space complexity is O(10×10) for the board plus O(number of slots) for recursion state.
 
 ## Verification
 

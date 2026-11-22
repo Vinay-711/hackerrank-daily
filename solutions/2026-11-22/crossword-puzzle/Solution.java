@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 class Result {
@@ -18,99 +17,88 @@ class Result {
         for (int i = 0; i < 10; i++) {
             board[i] = crossword.get(i).toCharArray();
         }
-        // collect slots
+        String[] wordArr = words.split(";");
         List<Slot> slots = new ArrayList<>();
         // horizontal slots
-        for (int r = 0; r < 10; r++) {
-            int c = 0;
-            while (c < 10) {
-                if (board[r][c] == '-') {
-                    int start = c;
-                    while (c < 10 && board[r][c] == '-') c++;
-                    int len = c - start;
-                    if (len > 1) slots.add(new Slot(r, start, len, true));
+        for (int i = 0; i < 10; i++) {
+            int j = 0;
+            while (j < 10) {
+                if (board[i][j] == '-') {
+                    int start = j;
+                    while (j < 10 && board[i][j] == '-') j++;
+                    int len = j - start;
+                    if (len > 1) slots.add(new Slot(i, start, len, true));
                 } else {
-                    c++;
+                    j++;
                 }
             }
         }
         // vertical slots
-        for (int c = 0; c < 10; c++) {
-            int r = 0;
-            while (r < 10) {
-                if (board[r][c] == '-') {
-                    int start = r;
-                    while (r < 10 && board[r][c] == '-') r++;
-                    int len = r - start;
-                    if (len > 1) slots.add(new Slot(start, c, len, false));
+        for (int j = 0; j < 10; j++) {
+            int i = 0;
+            while (i < 10) {
+                if (board[i][j] == '-') {
+                    int start = i;
+                    while (i < 10 && board[i][j] == '-') i++;
+                    int len = i - start;
+                    if (len > 1) slots.add(new Slot(start, j, len, false));
                 } else {
-                    r++;
+                    i++;
                 }
             }
         }
-        String[] wordArr = words.split(";");
         boolean[] used = new boolean[wordArr.length];
-        if (solve(board, slots, 0, wordArr, used)) {
-            List<String> result = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                result.add(new String(board[i]));
-            }
-            return result;
+        solve(0, slots, board, wordArr, used);
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            result.add(new String(board[i]));
         }
-        // Should never happen according to problem statement
-        return Collections.emptyList();
+        return result;
     }
 
-    private static boolean solve(char[][] board, List<Slot> slots, int idx, String[] words, boolean[] used) {
+    private static boolean solve(int idx, List<Slot> slots, char[][] board, String[] words, boolean[] used) {
         if (idx == slots.size()) return true;
         Slot slot = slots.get(idx);
         for (int w = 0; w < words.length; w++) {
-            if (used[w]) continue;
-            String word = words[w];
-            if (word.length() != slot.len) continue;
-            if (!fits(board, slot, word)) continue;
-            char[] backup = place(board, slot, word);
-            used[w] = true;
-            if (solve(board, slots, idx + 1, words, used)) return true;
-            // backtrack
-            restore(board, slot, backup);
-            used[w] = false;
+            if (!used[w] && words[w].length() == slot.len) {
+                if (canPlace(slot, board, words[w])) {
+                    List<int[]> changed = place(slot, board, words[w]);
+                    used[w] = true;
+                    if (solve(idx + 1, slots, board, words, used)) return true;
+                    used[w] = false;
+                    undo(changed, board);
+                }
+            }
         }
         return false;
     }
 
-    private static boolean fits(char[][] board, Slot slot, String word) {
-        int r = slot.r, c = slot.c;
-        for (int i = 0; i < slot.len; i++) {
-            char ch = slot.horiz ? board[r][c + i] : board[r + i][c];
-            if (ch != '-' && ch != word.charAt(i)) return false;
+    private static boolean canPlace(Slot slot, char[][] board, String word) {
+        for (int k = 0; k < slot.len; k++) {
+            int r = slot.r + (slot.horiz ? 0 : k);
+            int c = slot.c + (slot.horiz ? k : 0);
+            char ch = board[r][c];
+            if (ch != '-' && ch != word.charAt(k)) return false;
         }
         return true;
     }
 
-    private static char[] place(char[][] board, Slot slot, String word) {
-        char[] backup = new char[slot.len];
-        int r = slot.r, c = slot.c;
-        for (int i = 0; i < slot.len; i++) {
-            if (slot.horiz) {
-                backup[i] = board[r][c + i];
-                board[r][c + i] = word.charAt(i);
-            } else {
-                backup[i] = board[r + i][c];
-                board[r + i][c] = word.charAt(i);
+    private static List<int[]> place(Slot slot, char[][] board, String word) {
+        List<int[]> changed = new ArrayList<>();
+        for (int k = 0; k < slot.len; k++) {
+            int r = slot.r + (slot.horiz ? 0 : k);
+            int c = slot.c + (slot.horiz ? k : 0);
+            if (board[r][c] == '-') {
+                board[r][c] = word.charAt(k);
+                changed.add(new int[]{r, c});
             }
         }
-        return backup;
+        return changed;
     }
 
-    private static void restore(char[][] board, Slot slot, char[] backup) {
-        int r = slot.r, c = slot.c;
-        for (int i = 0; i < slot.len; i++) {
-            if (slot.horiz) {
-                board[r][c + i] = backup[i];
-            } else {
-                board[r + i][c] = backup[i];
-            }
+    private static void undo(List<int[]> changed, char[][] board) {
+        for (int[] pos : changed) {
+            board[pos[0]][pos[1]] = '-';
         }
     }
 }
@@ -132,7 +120,7 @@ public class Solution {
 
         List<String> result = Result.crosswordPuzzle(crossword, words);
 
-        bufferedWriter.write(result.stream().collect(joining("\n")) + "\n");
+        bufferedWriter.write(result.stream().collect(Collectors.joining("\n")) + "\n");
 
         bufferedReader.close();
         bufferedWriter.close();
