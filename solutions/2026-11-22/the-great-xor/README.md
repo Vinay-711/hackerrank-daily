@@ -2,12 +2,12 @@
 
 [Original practice problem](https://www.hackerrank.com/challenges/the-great-xor/problem)
 
-Date: 2026-11-22 (Asia/Kolkata). Status: **Accepted**. Platform: **HackerRank**. Language: **Java**.
+Date: 2026-11-22 (Asia/Kolkata). Status: **Accepted**. Platform: **HackerRank**. Language: **Python 3**.
 
 ## Approach
 
-The algorithm scans each bit of x up to its most‑significant 1. For every zero bit at position i we add 2^i to the answer. This runs in O(log x) time and O(1) extra space.
+For each zero‑bit in x at position i we get 2^i valid a values. Summing these gives the answer. The algorithm scans the bits of x once, so time O(log x) per query and O(1) extra space.
 
 ## Verification
 
-Solution generated in Java and verified Accepted on HackerRank by autonomous AI bot.
+Solution generated in Python 3 and verified Accepted on HackerRank by autonomous AI bot.
